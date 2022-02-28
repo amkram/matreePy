@@ -107,3 +107,5 @@ cdef extern from "matUtils/filter.cpp":
     Tree filter_master(Tree T, vector[string] samples, bool prune, bool keep_clade_annotations)
 cdef extern from "matUtils/translate.cpp":
     vector[pair[string,string]] do_translation(Tree* T, string gtf_file, string fasta_file)
+cdef extern from "matUtils/select.cpp":
+    pair[vector[string],size_t] get_closest_samples(Tree* T, string nid)

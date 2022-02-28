@@ -156,11 +156,12 @@ cdef class MATree:
         return self.t.get_parsimony_score()
 
     def get_node(self,name):
-        nc = MATNode().from_node(self.t.get_node(name.encode("UTF-8")))
+        nc = MATNode()
+        nc.from_node(self.t.get_node(name.encode("UTF-8")))
         if len(self.translation_table) > 0:
             print("Propagating translation.")
             nc.apply_translation(self.translation_table.get(name,""))
-        return nc
+        return nc if nc.n else None
 
     cdef dfe_helper(self, mat.Node* node, bool get_translation=False):
         pynvec = []
@@ -287,3 +288,11 @@ cdef class MATree:
         cdef vector[pair[string,string]] changes = mat.do_translation(&self.t,gtf_file.encode("UTF-8"),fasta_file.encode("UTF-8"))
         for i in range(changes.size()):
             self.translation_table[changes[i].first.decode("UTF-8")] = changes[i].second.decode("UTF-8")
+
+    def get_closest_samples(self, nid):
+        '''
+        Return a tuple containing (1) a tuple of the sample ID(s) closest to a target node
+        and (2) the distance of these samples from the target node.
+        '''
+        cdef pair[vector[string],size_t] samples = mat.get_closest_samples(&self.t, nid.encode("UTF-8"))
+        return samples
