@@ -11,9 +11,13 @@ print("getting closest pairs")
 all_closest = []
 for node in tqdm.tqdm(dfs):
     if node.is_leaf():
-        print(node.get_id())
-        closest = tree.get_closest_samples(node.get_id())
-        all_closest.append(closest)
+        try:
+            print(node.get_id())
+            closest = tree.get_closest_samples(node.get_id())
+            all_closest.append(closest)
+        except:
+	        print(node.get_id())
+        
 
 
 print(all_closest[:100])
